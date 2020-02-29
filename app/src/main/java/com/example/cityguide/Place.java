@@ -16,7 +16,6 @@ public class Place {
         this.latlng = latlng;
         this.rating = rating;
         this.address = address;
-        this.placeId = placeId;
         this.distance = distance;
     }
 
