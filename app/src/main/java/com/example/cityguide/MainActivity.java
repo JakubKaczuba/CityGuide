@@ -11,6 +11,10 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.ImageButton;
+import android.widget.SeekBar;
+import android.widget.TextView;
 
 import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.net.PlacesClient;
@@ -26,10 +30,13 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
-    private final String apikey = "AIzaSyDbplIQW6ZSSZ3ZggrsSqT1uxCO2syPbGM";
+    private final String apikey = "AIzaSyAMr-S8M46kUZRjzXBhtfl9hmpgZcjqPYU";
     private GeoApiContext geoApiContext;
     private ArrayList<Place> listOfPlaces;
-    private int maxDistance = 6000;
+    private int maxDistance = 10000;
+    private ImageButton buttonMuseum, buttonChurch, buttonRestaurant, buttonCafe;
+    private TextView textViewDistance;
+    private SeekBar seekBarDistance;
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
@@ -38,12 +45,40 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        buttonMuseum = (ImageButton)findViewById(R.id.imageButtonMuseum);
+        buttonChurch = (ImageButton)findViewById(R.id.imageButtonChurch);
+        buttonRestaurant = (ImageButton)findViewById(R.id.imageButtonRestaurant);
+        buttonCafe = (ImageButton)findViewById(R.id.imageButtonCafe);
+        textViewDistance = (TextView)findViewById(R.id.textViewDistance);
+        seekBarDistance = (SeekBar)findViewById(R.id.seekBarDistance);
+
         listOfPlaces = new ArrayList<Place>();
         geoApiContext = new GeoApiContext.Builder()
                 .apiKey(apikey)
                 .build();
 
+        NearbySearchRequest nearby = new NearbySearchRequest(geoApiContext);
 
+        /*
+        obsługa seekBar
+         */
+
+        seekBarDistance.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                refreshSeekBarText();
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
 
         /*
         wyznaczanie lokalizacji użytkownika
@@ -60,8 +95,6 @@ public class MainActivity extends AppCompatActivity {
         Location net_loc = null, gps_loc = null, finalLoc = null;
 
         if (gps_enabled) {
-
-
             if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
                     && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                 // TODO: Consider calling
@@ -71,12 +104,11 @@ public class MainActivity extends AppCompatActivity {
                 //                                          int[] grantResults)
                 // to handle the case where the user grants the permission. See the documentation
                 // for Activity#requestPermissions for more details.
-
-                return;
+                ActivityCompat.requestPermissions(MainActivity.this,
+                        new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                        0);
             }
-            System.out.println("dupa");
             gps_loc = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-
         }
         if(network_enabled) {
             net_loc = lm.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
@@ -101,38 +133,59 @@ public class MainActivity extends AppCompatActivity {
 
         final LatLng currentLocation = new LatLng(finalLoc.getLatitude(), finalLoc.getLongitude());
 
+
+
         /*
-        pobieranie danych miejsc i dodanie ich do listy
+        obsługa kliknięcia przycisków
          */
 
-        NearbySearchRequest nearby = new NearbySearchRequest(geoApiContext);
-        nearby.radius(maxDistance);
-        nearby.rankby(RankBy.PROMINENCE);
-        nearby.type(PlaceType.RESTAURANT);
-        nearby.location(currentLocation);
-
-
-
-        nearby.setCallback(new PendingResult.Callback<PlacesSearchResponse>() {
+        View.OnClickListener onClick = new View.OnClickListener() {
             @Override
-            public void onResult(PlacesSearchResponse result) {
-                for(int i=0; i<result.results.length; i++) {
-                    double distanceinMeters = distance(result.results[i].geometry.location.lat,
-                            currentLocation.lat,
-                            result.results[i].geometry.location.lng,
-                            currentLocation.lng);
+            public void onClick(View v) {
 
-                    System.out.println(result.results[i].name); //sprawdzenie, czy aplikacja pobiera dane
+                PlaceType placeType;
 
+                if(v == buttonMuseum) {
+                    placeType = PlaceType.MUSEUM;
                 }
-            }
+                else if(v == buttonChurch) {
+                    placeType = PlaceType.CHURCH;
+                }
+                else if(v == buttonRestaurant) {
+                    placeType = PlaceType.RESTAURANT;
+                }
+                else {
+                    placeType = PlaceType.CAFE;
+                }
 
-            @Override
-            public void onFailure(Throwable e) {
-                System.out.println(e.toString());
-            }
-        });
+                setNearbyParameters(placeType, seekBarDistance.getProgress(), nearby, currentLocation);
 
+                nearby.setCallback(new PendingResult.Callback<PlacesSearchResponse>() {
+                    @Override
+                    public void onResult(PlacesSearchResponse result) {
+                        for(int i=0; i<result.results.length; i++) {
+                            double distanceinMeters = distance(result.results[i].geometry.location.lat,
+                                    currentLocation.lat,
+                                    result.results[i].geometry.location.lng,
+                                    currentLocation.lng);
+
+                            System.out.println(result.results[i].name); //sprawdzenie, czy aplikacja pobiera dane
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Throwable e) {
+                        System.out.println(e.toString());
+                    }
+                });
+
+            }
+        };
+
+        buttonMuseum.setOnClickListener(onClick);
+        buttonChurch.setOnClickListener(onClick);
+        buttonRestaurant.setOnClickListener(onClick);
+        buttonCafe.setOnClickListener(onClick);
     }
 
     public static double distance(double lat1, double lat2, double lon1, double lon2) {
@@ -148,5 +201,22 @@ public class MainActivity extends AppCompatActivity {
         double distance = R * c * 1000; // convert to meters
 
         return distance;
+    }
+
+    public static void setNearbyParameters(PlaceType placeType, int maxDistance, NearbySearchRequest nearby, LatLng currentLocation) {
+        nearby.radius(maxDistance);
+        nearby.rankby(RankBy.PROMINENCE);
+        nearby.type(placeType);
+        nearby.location(currentLocation);
+    }
+
+    public void refreshSeekBarText() {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                textViewDistance.setText("Set radius of search: " + seekBarDistance.getProgress() + " meters");
+                textViewDistance.invalidate();
+            }
+        });
     }
 }
