@@ -1,22 +1,25 @@
 package com.example.cityguide;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.maps.model.LatLng;
 
-public class Place {
+public class Place implements Parcelable {
 
     private String name;
-    private LatLng latlng;
+    private double lat;
+    private double lng;
     private float rating;
     private String address;
     private String placeId;
-    private double distance;
 
-    public Place(String name, LatLng latlng, float rating, String address, String placeId, double distance) {
+    public Place(String name, double lat, double lng, float rating, String address, String placeId) {
         this.name = name;
-        this.latlng = latlng;
+        this.lat = lat;
+        this.lng = lng;
         this.rating = rating;
         this.address = address;
-        this.distance = distance;
     }
 
     public String getName() {
@@ -27,12 +30,20 @@ public class Place {
         this.name = name;
     }
 
-    public LatLng getLatlng() {
-        return latlng;
+    public double getLat() {
+        return lat;
     }
 
-    public void setLatlng(LatLng latlng) {
-        this.latlng = latlng;
+    public void setLat(double lat) {
+        this.lat = lat;
+    }
+
+    public double getLng() {
+        return lng;
+    }
+
+    public void setLng(double lng) {
+        this.lng = lng;
     }
 
     public float getRating() {
@@ -59,12 +70,43 @@ public class Place {
         this.placeId = placeId;
     }
 
-    public double getDistance() {
-        return distance;
+    @Override
+    public int describeContents() {
+        return 0;
     }
 
-    public void setDistance(double distance) {
-        this.distance = distance;
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+
+        dest.writeString(this.name);
+        dest.writeFloat(this.rating);
+        dest.writeString(this.address);
+        dest.writeDouble(this.lat);
+        dest.writeDouble(this.lng);
+        dest.writeString(this.placeId);
     }
+
+
+    protected Place(Parcel in) {
+        this.name = in.readString();
+        this.rating = in.readFloat();
+        this.address = in.readString();
+        this.lat = in.readDouble();
+        this.lng = in.readDouble();
+        this.placeId = in.readString();
+    }
+
+    public static final Parcelable.Creator<Place> CREATOR = new Parcelable.Creator<Place>() {
+        @Override
+        public Place createFromParcel(Parcel source) {
+            return new Place(source);
+        }
+
+        @Override
+        public Place[] newArray(int size) {
+            return new Place[size];
+        }
+    };
+
 }
 

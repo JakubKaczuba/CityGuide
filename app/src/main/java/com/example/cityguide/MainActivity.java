@@ -6,13 +6,16 @@ import androidx.core.app.ActivityCompat;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.ListView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
@@ -33,7 +36,6 @@ public class MainActivity extends AppCompatActivity {
     private final String apikey = "AIzaSyAMr-S8M46kUZRjzXBhtfl9hmpgZcjqPYU";
     private GeoApiContext geoApiContext;
     private ArrayList<Place> listOfPlaces;
-    private int maxDistance = 10000;
     private ImageButton buttonMuseum, buttonChurch, buttonRestaurant, buttonCafe;
     private TextView textViewDistance;
     private SeekBar seekBarDistance;
@@ -169,12 +171,26 @@ public class MainActivity extends AppCompatActivity {
                                     result.results[i].geometry.location.lng,
                                     currentLocation.lng);
 
-                            System.out.println(result.results[i].name); //sprawdzenie, czy aplikacja pobiera dane
-                        }
-                    }
+                            //System.out.println(result.results[i].vicinity); //sprawdzenie, czy aplikacja pobiera dane
 
+
+                            listOfPlaces.add(new Place(result.results[i].name,
+                                    result.results[i].geometry.location.lat,
+                                    result.results[i].geometry.location.lng,
+                                    result.results[i].rating,
+                                    result.results[i].vicinity,
+                                    result.results[i].placeId));
+                        }
+
+                        Intent intent = new Intent(getApplicationContext(), ListViewActivity.class);
+                        startActivity(new Intent(getApplicationContext(), ListViewActivity.class)
+                                .putParcelableArrayListExtra("places", (ArrayList<? extends Parcelable>) listOfPlaces));
+
+
+                    }
                     @Override
                     public void onFailure(Throwable e) {
+
                         System.out.println(e.toString());
                     }
                 });
