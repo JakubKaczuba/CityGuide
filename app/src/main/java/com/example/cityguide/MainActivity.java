@@ -30,6 +30,9 @@ import com.google.maps.model.PlacesSearchResponse;
 import com.google.maps.model.RankBy;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -181,10 +184,13 @@ public class MainActivity extends AppCompatActivity {
                                     result.results[i].vicinity,
                                     result.results[i].placeId));
                         }
-
+                        Bundle bundle = new Bundle();
+                        bundle.putDouble("currentLat", currentLocation.lat);
+                        bundle.putDouble("currentLng", currentLocation.lng);
                         Intent intent = new Intent(getApplicationContext(), ListViewActivity.class);
-                        startActivity(new Intent(getApplicationContext(), ListViewActivity.class)
-                                .putParcelableArrayListExtra("places", (ArrayList<? extends Parcelable>) listOfPlaces));
+                        intent.putExtras(bundle);
+                        intent.putParcelableArrayListExtra("places", (ArrayList<? extends Parcelable>) listOfPlaces);
+                        startActivity(intent);
 
 
                     }
