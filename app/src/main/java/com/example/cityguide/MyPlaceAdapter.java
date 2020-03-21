@@ -60,7 +60,7 @@ public class MyPlaceAdapter extends ArrayAdapter<Place> {
                 textViewAddress.setText(p.getAddress());
             }
             if(textViewRating != null) {
-                textViewRating.setText(String.valueOf(p.getRating()));
+                textViewRating.setText("Rating: " + String.valueOf(p.getRating())+ "/5");
             }
 
         }

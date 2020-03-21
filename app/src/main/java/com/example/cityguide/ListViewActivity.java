@@ -12,12 +12,13 @@ import android.widget.ListView;
 import com.google.maps.model.LatLng;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class ListViewActivity extends AppCompatActivity {
 
     private ListView listViewPlaces;
     private MyPlaceAdapter placeAdapter;
-    private ArrayList<Place> places;
+    private ArrayList<Place> places, filteredPlaces;
     private Intent intent;
     private LatLng currentPosition;
 
@@ -33,9 +34,10 @@ public class ListViewActivity extends AppCompatActivity {
 
         places = intent.getParcelableArrayListExtra("places");
 
+        filteredPlaces = sortByRating(places);
 
         listViewPlaces = (ListView)findViewById(R.id.listViewPlaces);
-        placeAdapter = new MyPlaceAdapter(this, R.layout.row_of_listview, places);
+        placeAdapter = new MyPlaceAdapter(this, R.layout.row_of_listview, filteredPlaces);
         listViewPlaces.setAdapter(placeAdapter);
 
         listViewPlaces.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -51,6 +53,23 @@ public class ListViewActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+    }
 
+    /*
+    funkcja sortująca korzystająca z algorytmu sortowania bąbelkowego
+     */
+    public static ArrayList<Place> sortByRating(ArrayList<Place> places) {
+
+        int n = places.size();
+
+        while (n > 1) {
+            for (int i = 0; i < n - 1; i++) {
+                if (places.get(i).getRating() < places.get(i + 1).getRating()) {
+                    Collections.swap(places, i, i + 1);
+                }
+            }
+            n = n - 1;
+        }
+        return places;
     }
 }

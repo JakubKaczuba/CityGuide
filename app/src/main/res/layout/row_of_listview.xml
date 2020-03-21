@@ -7,7 +7,10 @@
         android:id="@+id/textViewName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="TextView" />
+        android:text="TextView"
+        android:textSize="20dp"
+        android:textStyle="bold|italic"
+        />
 
     <TextView
         android:id="@+id/textViewAddress"
@@ -19,6 +22,7 @@
         android:id="@+id/textViewRating"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="TextView" />
+        android:text="TextView"
+        android:textColor="@android:color/holo_blue_light"/>
 
 </LinearLayout>
