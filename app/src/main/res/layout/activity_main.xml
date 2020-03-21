@@ -15,7 +15,7 @@
         android:layout_marginTop="228dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@android:drawable/btn_star_big_on" />
+        app:srcCompat="@drawable/museum" />
 
     <ImageButton
         android:id="@+id/imageButtonChurch"
@@ -30,7 +30,7 @@
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toEndOf="@+id/imageButtonMuseum"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@android:drawable/ic_input_add" />
+        app:srcCompat="@drawable/churches" />
 
     <ImageButton
         android:id="@+id/imageButtonRestaurant"
@@ -41,7 +41,7 @@
         android:layout_marginTop="40dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imageButtonMuseum"
-        app:srcCompat="@android:drawable/ic_delete" />
+        app:srcCompat="@drawable/restaurants" />
 
     <ImageButton
         android:id="@+id/imageButtonCafe"
@@ -56,7 +56,7 @@
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toEndOf="@+id/imageButtonRestaurant"
         app:layout_constraintTop_toBottomOf="@+id/imageButtonChurch"
-        app:srcCompat="@android:drawable/ic_notification_overlay" />
+        app:srcCompat="@drawable/cafes" />
 
     <SeekBar
         android:id="@+id/seekBarDistance"
