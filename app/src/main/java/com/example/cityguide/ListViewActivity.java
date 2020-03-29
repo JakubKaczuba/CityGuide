@@ -34,6 +34,8 @@ public class ListViewActivity extends AppCompatActivity {
 
         places = intent.getParcelableArrayListExtra("places");
 
+        System.out.println("DYSTANS: " + places.get(3).getDistanceInMeters());
+
         filteredPlaces = sortByRating(places);
 
         listViewPlaces = (ListView)findViewById(R.id.listViewPlaces);

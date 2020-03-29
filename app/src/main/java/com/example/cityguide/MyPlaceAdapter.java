@@ -51,7 +51,7 @@ public class MyPlaceAdapter extends ArrayAdapter<Place> {
             TextView textViewName = (TextView)v.findViewById(R.id.textViewName);
             TextView textViewAddress = (TextView)v.findViewById(R.id.textViewAddress);
             TextView textViewRating = (TextView)v.findViewById(R.id.textViewRating);
-            TextView textViewDistance = (TextView)v.findViewById(R.id.textViewDistance);
+            TextView textViewDistance = (TextView)v.findViewById(R.id.textViewDistanceInMeters);
 
             if(textViewName != null) {
                 textViewName.setText(p.getName());
@@ -61,6 +61,9 @@ public class MyPlaceAdapter extends ArrayAdapter<Place> {
             }
             if(textViewRating != null) {
                 textViewRating.setText("Rating: " + String.valueOf(p.getRating())+ "/5");
+            }
+            if(textViewDistance != null) {
+                textViewDistance.setText("Distance: " + String.valueOf((int)p.getDistanceInMeters())+ "m");
             }
 
         }

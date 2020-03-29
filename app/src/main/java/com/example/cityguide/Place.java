@@ -13,13 +13,15 @@ public class Place implements Parcelable {
     private float rating;
     private String address;
     private String placeId;
+    private double distanceInMeters;
 
-    public Place(String name, double lat, double lng, float rating, String address, String placeId) {
+    public Place(String name, double lat, double lng, float rating, String address, String placeId, double distanceInMeters) {
         this.name = name;
         this.lat = lat;
         this.lng = lng;
         this.rating = rating;
         this.address = address;
+        this.distanceInMeters = distanceInMeters;
     }
 
     public String getName() {
@@ -70,6 +72,14 @@ public class Place implements Parcelable {
         this.placeId = placeId;
     }
 
+    public double getDistanceInMeters() {
+        return distanceInMeters;
+    }
+
+    public void setDistanceInMeters(double distanceInMeters) {
+        this.distanceInMeters = distanceInMeters;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -84,6 +94,7 @@ public class Place implements Parcelable {
         dest.writeDouble(this.lat);
         dest.writeDouble(this.lng);
         dest.writeString(this.placeId);
+        dest.writeDouble(this.distanceInMeters);
     }
 
 
@@ -94,6 +105,7 @@ public class Place implements Parcelable {
         this.lat = in.readDouble();
         this.lng = in.readDouble();
         this.placeId = in.readString();
+        this.distanceInMeters = in.readDouble();
     }
 
     public static final Parcelable.Creator<Place> CREATOR = new Parcelable.Creator<Place>() {

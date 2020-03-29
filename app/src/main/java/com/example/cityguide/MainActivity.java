@@ -169,7 +169,7 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onResult(PlacesSearchResponse result) {
                         for(int i=0; i<result.results.length; i++) {
-                            double distanceinMeters = distance(result.results[i].geometry.location.lat,
+                            double distanceInMeters = distance(result.results[i].geometry.location.lat,
                                     currentLocation.lat,
                                     result.results[i].geometry.location.lng,
                                     currentLocation.lng);
@@ -182,8 +182,10 @@ public class MainActivity extends AppCompatActivity {
                                     result.results[i].geometry.location.lng,
                                     result.results[i].rating,
                                     result.results[i].vicinity,
-                                    result.results[i].placeId));
-                        }
+                                    result.results[i].placeId,
+                                    distanceInMeters));
+                            System.out.println(result.results[i].name + ":" + distanceInMeters);
+                        };
                         Bundle bundle = new Bundle();
                         bundle.putDouble("currentLat", currentLocation.lat);
                         bundle.putDouble("currentLng", currentLocation.lng);
