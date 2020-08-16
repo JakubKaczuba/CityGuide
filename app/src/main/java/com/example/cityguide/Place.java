@@ -3,8 +3,6 @@ package com.example.cityguide;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.google.maps.model.LatLng;
-
 public class Place implements Parcelable {
 
     private String name;
@@ -22,6 +20,11 @@ public class Place implements Parcelable {
         this.rating = rating;
         this.address = address;
         this.distanceInMeters = distanceInMeters;
+    }
+    public Place(String name, double lat, double lng) {
+        this.lat = lat;
+        this.lng = lng;
+        this.name = name;
     }
 
     public String getName() {

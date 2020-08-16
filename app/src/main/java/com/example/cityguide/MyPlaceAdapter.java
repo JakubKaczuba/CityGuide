@@ -1,18 +1,13 @@
 package com.example.cityguide;
 
-import android.content.ClipData;
+
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-
-import com.google.android.material.snackbar.Snackbar;
-
 import java.util.ArrayList;
 
 public class MyPlaceAdapter extends ArrayAdapter<Place> {
@@ -20,13 +15,6 @@ public class MyPlaceAdapter extends ArrayAdapter<Place> {
     private ArrayList<Place> places;
     private Context context;
     private int layoutRes;
-
-    private static class ViewHolder {
-        TextView tvName;
-        TextView tvAddress;
-        TextView tvRating;
-        TextView tvDistance;
-    }
 
     public MyPlaceAdapter(Context context, int layoutRes, ArrayList<Place> places) {
         super(context, layoutRes, places);
