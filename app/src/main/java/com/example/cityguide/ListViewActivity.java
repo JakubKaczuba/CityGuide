@@ -76,7 +76,6 @@ public class ListViewActivity extends AppCompatActivity {
         if(left < j) sortByRating(places, left, j);
         if(i < right) sortByRating(places, i, right);
     }
-
 }
 
 

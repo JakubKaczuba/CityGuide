@@ -63,41 +63,18 @@ public class MainActivity extends AppCompatActivity {
                 .apiKey(apikey)
                 .build();
 
-        /*
-        pobieranie wybranego miejsca z MapsActivity i tworzenie listy wybranych miejsc
-         */
 
-        bundle1 = getIntent().getExtras();
-        if (bundle1 == null) {
-
-            chosenPlaces = new ArrayList<Place>();
-        }
-
-        if (bundle1 != null) {
-            Intent intent = getIntent();
-            chosenPlaces = intent.getParcelableArrayListExtra("chosenPlaces");
-            chosenPlace = new Place(bundle1.getString("chosenPlaceName"),
-                    bundle1.getDouble("chosenPlaceLat"),
-                    bundle1.getDouble("chosenPlaceLng"));
-            System.out.println(chosenPlace.getName() + " this is it");
-
-            chosenPlaces.add(chosenPlace);
-
-            for (int i = 0; i < chosenPlaces.size(); i++) {
-                System.out.println(chosenPlaces.get(i).getName() + " DZIALA!!!!!");
-            }
-        }
 
         /*
         Utworzenie tablicy dwuwymiarowej odległości między miejscami
          */
 
-        double[][] distances = createDistanceTable(chosenPlaces);
-        for (int i = 0; i < distances.length; i++) {
-            for (int j = 0; j < distances.length; j++) {
-                System.out.println(distances[i][j]);
-            }
-        }
+//        double[][] distances = createDistanceTable(chosenPlaces);
+//        for (int i = 0; i < distances.length; i++) {
+//            for (int j = 0; j < distances.length; j++) {
+//                System.out.println(distances[i][j]);
+//            }
+//        }
 
 
         /*
@@ -167,13 +144,39 @@ public class MainActivity extends AppCompatActivity {
 
         final LatLng currentLocation = new LatLng(finalLoc.getLatitude(), finalLoc.getLongitude());
 
+                /*
+        pobieranie wybranego miejsca z MapsActivity i tworzenie listy wybranych miejsc
+         */
+
+        bundle1 = getIntent().getExtras();
+        if (bundle1 == null) {
+            chosenPlaces = new ArrayList<Place>();
+
 
         /*
            dodanie aktualnego położenia do listy wybranych miejsc
         */
 
-        Place place = new Place("MyLocation", currentLocation.lat, currentLocation.lng);
-        chosenPlaces.add(place);
+            Place place = new Place("MyLocation", currentLocation.lat, currentLocation.lng);
+            chosenPlaces.add(place);
+        }
+
+        if (bundle1 != null) {
+            Intent intent = getIntent();
+            chosenPlaces = intent.getParcelableArrayListExtra("chosenPlaces");
+            chosenPlace = new Place(bundle1.getString("chosenPlaceName"),
+                    bundle1.getDouble("chosenPlaceLat"),
+                    bundle1.getDouble("chosenPlaceLng"));
+//            System.out.println(chosenPlace.getName() + " this is it");
+
+            chosenPlaces.add(chosenPlace);
+
+//            for (int i = 0; i < chosenPlaces.size(); i++) {
+//                System.out.println(chosenPlaces.get(i).getName() + " DZIALA!!!!!");
+//            }
+        }
+
+
 
         /*
         obsługa przycisku wyznaczającego trasę
@@ -183,10 +186,17 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
+                for(int i=0; i<chosenPlaces.size(); i++) {
+                    System.out.println("Chosen place: " + chosenPlaces.get(i).getName());
+                }
                 Route route = new Route(chosenPlaces);
-                ArrayList<Place> calculatedRoute = new SimulatedAnnealing()
-                        .calculateRoute(SimulatedAnnealing.MAX_TEMPERATURE, route)
-                        .getPlaces();
+//                ArrayList<Place> calculatedRoute = new SimulatedAnnealing()
+//                        .calculateRoute(SimulatedAnnealing.MAX_TEMPERATURE, route)
+//                        .getPlaces();
+                ArrayList<Place> calculatedRoute = new NearesNeighbour().calculateRoute(chosenPlaces);
+                for(int i=0; i<calculatedRoute.size(); i++) {
+                    System.out.println("Calculated route: "+ calculatedRoute.get(i).getName());
+                }
                 Intent intent = new Intent(getApplicationContext(), MapsActivity2.class);
                 intent.putParcelableArrayListExtra("calculatedRoute", (ArrayList<? extends Parcelable>)calculatedRoute);
                 startActivity(intent);
